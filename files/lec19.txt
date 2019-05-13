@@ -1,0 +1,4 @@
+Benefit:
+It makes people that are routing more secure because there are more options.
+Risks:
+Their traffic on your machine is murky in a legal space.
