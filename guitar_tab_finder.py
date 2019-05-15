@@ -10,7 +10,7 @@ octave = [
 max_fret = 25
 penalize_open = False
 string_penalty = 1
-num_tabs = 5
+num_tabs = 1
 spacing = 4
 
 class Note:
@@ -35,8 +35,12 @@ class Note:
     def __repr__(self):
         return self.note+str(self.octave)
     def __eq__(self, other):
+        if type(other) != Note:
+            return False
         return self.note == other.note and self.octave == other.octave
     def __ne__(self, other):
+        if type(other) != Note:
+            return True
         return self.note != other.note or self.octave != other.octave
     def __add__(self, other):
        index = octave.index(self.note)
@@ -54,6 +58,24 @@ standard = [
     Note('A', 2),
     Note('E', 2),
 ]
+semitone = 2**(1/12)
+A4 = Note("A", 4)
+empty_note = Note(" ", 0)
+
+def freq_to_midi(f):
+    return (12/math.log(2)) * math.log(f/27.5) + 21
+
+def midi_to_note(i):
+    return A4 + (69-i)
+
+def freq_to_note(freq, a4=440):
+    if freq == 0:
+        return empty_note
+    from math import log
+    deltaFreq = (freq/a4)
+    deltaSteps = 12*log(deltaFreq, 2)
+
+    return A4 + round(deltaSteps)    
 
 def note_on_string(note, string):
     """Returns the fret a note would be on given string"""
@@ -111,6 +133,7 @@ def pretty_print(tab, tuning):
     """Prints a tab in for a txt format"""
     strings = {t: "" for t in tuning}
     space = "-"*spacing
+    holder = []
     for string, fret in tab:
         for s in strings:
             if s == string:
@@ -118,14 +141,12 @@ def pretty_print(tab, tuning):
             else:
                 strings[s] += space+"-"*len(str(fret))
     
-    print("_"*100)
     for note in tuning:
-        print(note, "|", strings[note])
+        holder.append(str(note) + " | " + str(strings[note]))
+    return holder    
 
-if __name__ == "__main__":    
-    """Simple Smoke on the Water test"""
-    test_melody = Note.melody_factory(['G 3', 'A# 3', 'C 4', 'G 3', 'A# 3', 'C# 4', 'C 4', 'G 3', 'A# 3', 'C 4', 'G 3'])
-
+def launcher(test_melody):
+    print(string_penalty, penalize_open)
     note_to_frets = {}
     for note in test_melody:
         if note in note_to_frets:
@@ -137,10 +158,11 @@ if __name__ == "__main__":
                 notes.append((string , n))
         note_to_frets[note] = notes
 
-    for note, tab in note_to_frets.items():
-        print(note, tab)
-
+    items = []
     for distance, tab in search(test_melody, note_to_frets):
-        pretty_print(tab, standard)
-        print("Distance:", distance)
+        items.append(pretty_print(tab, standard)+["Note Distance:" + str(distance)])
+    return items[0]
         
+if __name__ == "__main__":    
+    """Simple Smoke on the Water test"""
+    test_melody = Note.melody_factory(['G 3', 'A# 3', 'C 4', 'G 3', 'A# 3', 'C# 4', 'C 4', 'G 3', 'A# 3', 'C 4', 'G 3'])

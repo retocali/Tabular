@@ -1,11 +1,72 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
+<!doctype html>
+  <title>Tabular</title>
   <head>
-    <meta charset="utf-8">
-    <title>Flask Tutorial</title>
+    <style>
+      html {font-family:Arial, Helvetica, sans-serif; background: #eee; padding: 1rem;} 
+      body {max-width: 960px; margin: 0 auto; background: white; padding: 0.5rem; border: #377ba8 1rem solid} 
+      h1 {color: #377ba8; margin: 1rem 0; }
+      a {color: #377ba8; }
+      hr {border: none; border-top: 1px solid lightgray; }
+      nav {background: lightgray; display: flex; align-items: center; padding: 0 0.5rem; }
+      nav h1 {   flex: auto; margin: 0; }
+      nav h1 a {   text-decoration: none; padding: 0.25rem 0.5rem; }
+      nav ul   {   display: flex; list-style: none; margin: 0; padding: 0; }
+      nav ul li a, nav ul li span, header .action {   display: block; padding: 0.5rem; }
+      .content {   padding: 0 1rem 1rem; }
+      .content > header {   border-bottom: 1px solid lightgray; display: flex; align-items: flex-end; }
+      .content > header h1 {   flex: auto; margin: 1rem 0 0.25rem 0; }
+      .flash {   margin: 1em 0; padding: 1em; background: #cae6f6; border: 1px solid #377ba8; }
+      .post {   display: flex; align-items: flex-end; font-size: 0.85em; }
+      .post {   flex:content; border: #cae6f6 solid 1px; background-color: #212121}
+      .post {   font-size: 1.5em; margin: 1em ; }
+      .post {   color: #eee; font-style: italic; }
+      .post { font-family: 'Courier New', Courier, monospace}
+      .content:last-child {   margin-bottom: 0; }
+      .content form {   margin: 1em 0; display: flex; flex-direction: column; }
+      .content label {   font-weight: bold; margin-bottom: 0.5em; }
+      .content input, .content textarea {   margin-bottom: 1em; }
+      .content textarea {   min-height: 12em; resize: vertical; }
+      input.danger {   color: #cc2f2e; }
+      input[type=submit] {   align-self: start; min-width: 10em; }     
+    </style>
   </head>
   <body>
-    <h1> My First Try Using Flask </h1>
-    <p> Flask is Fun </p>
+    <h1>Tabular</h1>
+    <h2>Guitar Tab Transcription</h2>
+
+    <div class="content">
+      <form method=post enctype=multipart/form-data>
+        <input type=file name=file>
+        
+          <input type=submit value=Upload>
+          
+        <div class="content">
+          <label for=checkbox> Open String</label>
+          <input type=checkbox name=open_string id=checkbox>
+        </div>
+        <div class="content">
+            <label for=range> String Change Penalty<br></label>
+            <input type="range" name=string_penalty min="0" max="1" step="0.1" id="range">
+          </div>
+          
+        
+        
+      </form>
+    </div>
+
+    <h3>Output Tab</h3>
+    <div class="post">
+      {% if output == False %}
+      |--------------------------------------------------------------|<br>
+      |--------------------------------------------------------------|<br>
+      |--------------------------------------------------------------|<br>
+      |--------------------------------------------------------------|<br>
+      |--------------------------------------------------------------|<br>
+      |--------------------------------------------------------------|
+      {% else %}
+        {% for line in output %}
+          {{line}}<br>
+        {% endfor %}
+      {% endif %}
+    </div>
   </body>
-</html>
